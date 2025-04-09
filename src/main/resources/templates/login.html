@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<h1>Login</h1>
+<div th:if="${param.error}">
+    <div class="alert alert-danger">
+        Credenciais inválidas.
+    </div>
+</div>
+<div th:if="${param.logout}">
+    <div class="alert alert-info">
+        Você foi desconectado.
+    </div>
+</div>
+<form th:action="@{/login}" method="post">
+    <!-- Campo para email - IMPORTANTE: use 'username' como nome do campo para compatibilidade com Spring Security -->
+    <label for="username">E-mail:</label>
+    <input type="email" id="username" name="username" required>
+    <br>
+
+    <!-- Campo para senha -->
+    <label for="password">Senha:</label>
+    <input type="password" id="password" name="password" required>
+    <br>
+
+    <!-- Botão de submissão -->
+    <button type="submit">Entrar</button>
+</form>
+<p>
+    <a th:href="@{/users/register}">Cadastre-se</a>
+</p>
+</body>
+</html>

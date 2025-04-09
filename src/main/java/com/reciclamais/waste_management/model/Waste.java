@@ -20,7 +20,7 @@ public class Waste {
     @Enumerated(EnumType.STRING)
     private Type type;
 
-    private Double quantity;
+    private Double weight;
 
     @Temporal(TemporalType.DATE)
     @Column(nullable = false)

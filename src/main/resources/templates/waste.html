@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<head>
+    <title>Gerenciamento de Resíduos</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body>
+<h1 th:text="${titulo}">Registro de Resíduos</h1>
+
+<fieldset>
+<form th:action="@{/waste/save}" th:object="${waste}" method="post">
+    <!-- Campo para selecionar o tipo de resíduo -->
+    <label for="tipo">Tipo de Resíduo:</label>
+    <select id="tipo" name="tipo">
+        <option value="Plástico">Plástico</option>
+        <option value="Vidro">Vidro</option>
+        <option value="Papel">Papel</option>
+        <option value="Orgânico">Orgânico</option>
+        <option value="Outros">Outros</option>
+    </select>
+    <br>
+    <label>
+        <input type="number" name="quantidade" placeholder="Quantidade" required />
+    </label>
+    <label>
+        <input type="text" name="unidadeMedida" placeholder="Unidade (kg, L, etc.)" required />
+    </label>
+    <label>
+        <input type="date" name="dataColeta" required />
+    </label>
+    <button type="submit">Salvar</button>
+</form>
+</fieldset>
+
+<h2>Lista de Resíduos</h2>
+<table>
+    <tr>
+        <th>Tipo</th>
+        <th>Quantidade</th>
+        <th>Data</th>
+    </tr>
+    <tr th:each="waste : ${wastes}">
+        <td th:text="${waste.type}"></td>
+        <td th:text="${waste.quantity}"></td>
+        <td th:text="${waste.date}"></td>
+    </tr>
+</table>
+
+</body>
+</html>

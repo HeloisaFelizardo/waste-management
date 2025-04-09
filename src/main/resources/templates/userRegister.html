@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cadastro de Usuário</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<h1>Cadastro de Usuário</h1>
+<form th:action="@{/users/save}" th:object="${user}" method="post">
+    <!-- Campo para nome -->
+    <label for="name">Nome:</label>
+    <input type="text" id="name" th:field="*{name}" required>
+    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error"></div>
+    <br>
+
+    <!-- Campo para email -->
+    <label for="email">E-mail:</label>
+    <input type="email" id="email" th:field="*{email}" required>
+    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error"></div>
+    <br>
+
+    <!-- Campo para senha -->
+    <label for="password">Senha:</label>
+    <input type="password" id="password" th:field="*{password}" required>
+    <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error"></div>
+    <br>
+
+    <!-- Campo para tipo de usuário -->
+    <label for="typeUser">Tipo de Usuário:</label>
+    <select id="typeUser" th:field="*{typeUser}">
+        <option th:each="tipoUsuario : ${tiposUsuario}"
+                th:value="${tipoUsuario}"
+                th:text="${tipoUsuario.name()}">
+        </option>
+    </select>
+    <br>
+
+    <!-- Botão de submissão -->
+    <button type="submit">Cadastrar</button>
+</form>
+<p>
+    <a th:href="@{/login}">Já possui conta? Faça login</a>
+</p>
+</body>
+</html>
