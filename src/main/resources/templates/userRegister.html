@@ -2,44 +2,49 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Cadastro de Usuário</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<h1>Cadastro de Usuário</h1>
-<form th:action="@{/users/save}" th:object="${user}" method="post">
-    <!-- Campo para nome -->
-    <label for="name">Nome:</label>
-    <input type="text" id="name" th:field="*{name}" required>
-    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error"></div>
-    <br>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="text-center">Cadastro de Usuário</h3>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/users/save}" th:object="${user}" method="post">
+                            <!-- Campo para nome -->
+                            <div class="form-group">
+                                <label for="name">Nome:</label>
+                                <input type="text" class="form-control" id="name" th:field="*{name}" required>
+                                <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></div>
+                            </div>
 
-    <!-- Campo para email -->
-    <label for="email">E-mail:</label>
-    <input type="email" id="email" th:field="*{email}" required>
-    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error"></div>
-    <br>
+                            <!-- Campo para email -->
+                            <div class="form-group">
+                                <label for="email">E-mail:</label>
+                                <input type="email" class="form-control" id="email" th:field="*{email}" required>
+                                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></div>
+                            </div>
 
-    <!-- Campo para senha -->
-    <label for="password">Senha:</label>
-    <input type="password" id="password" th:field="*{password}" required>
-    <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error"></div>
-    <br>
+                            <!-- Campo para senha -->
+                            <div class="form-group">
+                                <label for="password">Senha:</label>
+                                <input type="password" class="form-control" id="password" th:field="*{password}" required>
+                                <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger"></div>
+                            </div>
 
-    <!-- Campo para tipo de usuário -->
-    <label for="typeUser">Tipo de Usuário:</label>
-    <select id="typeUser" th:field="*{typeUser}">
-        <option th:each="tipoUsuario : ${tiposUsuario}"
-                th:value="${tipoUsuario}"
-                th:text="${tipoUsuario.name()}">
-        </option>
-    </select>
-    <br>
-
-    <!-- Botão de submissão -->
-    <button type="submit">Cadastrar</button>
-</form>
-<p>
-    <a th:href="@{/login}">Já possui conta? Faça login</a>
-</p>
+                            <!-- Botão de submissão -->
+                            <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
+                        </form>
+                        <div class="text-center mt-3">
+                            <a th:href="@{/login}" class="btn btn-link">Já possui conta? Faça login</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

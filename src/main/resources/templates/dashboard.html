@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Gestão de Resíduos</a>
+            <div class="navbar-nav ml-auto">
+                <form th:action="@{/logout}" method="post" class="form-inline">
+                    <button type="submit" class="btn btn-outline-light">Sair</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Bem-vindo ao Sistema de Gestão de Resíduos</h2>
+                <p>Este é seu painel de controle. Aqui você poderá gerenciar seus resíduos.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -13,6 +13,6 @@ public class LoginController {
 
     @GetMapping("/dashboard")
     public String dashboard() {
-        return "dashboard"; // Você precisará criar essa página
+        return "dashboard";
     }
 }

@@ -20,7 +20,6 @@ public class UserController {
     @GetMapping("/register")
     public String exibirFormularioCadastro(Model model) {
         model.addAttribute("user", new User());
-        model.addAttribute("tiposUsuario", TypeUser.values());
         return "userRegister";
     }
 
@@ -30,6 +29,8 @@ public class UserController {
             return "userRegister";
         }
         try {
+            // Define o tipo de usuário como USER automaticamente
+            user.setTypeUser(TypeUser.USER);
             userService.registerUser(user);
             return "redirect:/login";
         } catch (RuntimeException e) {
