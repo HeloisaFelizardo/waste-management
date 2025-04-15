@@ -22,9 +22,11 @@ public class Waste {
 
     private Double weight;
 
-    @Temporal(TemporalType.DATE)
     @Column(nullable = false)
     private LocalDate date;
+
+    @Column(length = 500)
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

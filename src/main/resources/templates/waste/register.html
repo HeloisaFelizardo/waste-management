@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Registro de Resíduo</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <h2 class="mb-4">Registro de Resíduo</h2>
+            
+            <form th:action="@{/waste/register}" method="post" th:object="${waste}" class="needs-validation" novalidate>
+                <div class="mb-3">
+                    <label for="type" class="form-label">Tipo de Resíduo</label>
+                    <select class="form-select" id="type" th:field="*{type}" required>
+                        <option value="">Selecione o tipo...</option>
+                        <option value="PLASTIC">Plástico</option>
+                        <option value="PAPER">Papel</option>
+                        <option value="GLASS">Vidro</option>
+                        <option value="METAL">Metal</option>
+                        <option value="ORGANIC">Orgânico</option>
+                        <option value="ELECTRONIC">Eletrônico</option>
+                        <option value="CONSTRUCTION">Construção</option>
+                        <option value="HOSPITAL">Hospitalar</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        Por favor, selecione um tipo de resíduo.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="weight" class="form-label">Peso (kg)</label>
+                    <input type="number" class="form-control" id="weight" th:field="*{weight}" 
+                           step="0.01" min="0" required>
+                    <div class="invalid-feedback">
+                        Por favor, informe um peso válido.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="form-label">Descrição</label>
+                    <textarea class="form-control" id="description" th:field="*{description}" 
+                              rows="3" required></textarea>
+                    <div class="invalid-feedback">
+                        Por favor, forneça uma descrição.
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Registrar Resíduo</button>
+                <a href="/dashboard" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html> 
