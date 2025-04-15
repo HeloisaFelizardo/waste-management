@@ -1,46 +1,70 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
 <head>
-    <title>Cadastro de Usuário</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Cadastro de Usuário - Gestão de Resíduos</title>
 </head>
 <body>
-    <div class="container mt-5">
+    <div layout:fragment="content">
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="text-center">Cadastro de Usuário</h3>
-                    </div>
-                    <div class="card-body">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <h3 class="card-title text-center mb-4">
+                            <i class="fas fa-user-plus text-primary me-2"></i>Cadastro de Usuário
+                        </h3>
+                        
                         <form th:action="@{/users/save}" th:object="${user}" method="post">
                             <!-- Campo para nome -->
-                            <div class="form-group">
-                                <label for="name">Nome:</label>
-                                <input type="text" class="form-control" id="name" th:field="*{name}" required>
-                                <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></div>
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Nome:</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-user"></i>
+                                    </span>
+                                    <input type="text" class="form-control" id="name" th:field="*{name}" required>
+                                </div>
+                                <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger mt-1"></div>
                             </div>
 
                             <!-- Campo para email -->
-                            <div class="form-group">
-                                <label for="email">E-mail:</label>
-                                <input type="email" class="form-control" id="email" th:field="*{email}" required>
-                                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">E-mail:</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+                                    <input type="email" class="form-control" id="email" th:field="*{email}" required>
+                                </div>
+                                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger mt-1"></div>
                             </div>
 
                             <!-- Campo para senha -->
-                            <div class="form-group">
-                                <label for="password">Senha:</label>
-                                <input type="password" class="form-control" id="password" th:field="*{password}" required>
-                                <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger"></div>
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Senha:</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                    <input type="password" class="form-control" id="password" th:field="*{password}" required>
+                                </div>
+                                <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger mt-1"></div>
                             </div>
 
                             <!-- Botão de submissão -->
-                            <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
+                            <div class="d-grid mb-3">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-2"></i>Cadastrar
+                                </button>
+                            </div>
+                            
+                            <div class="text-center">
+                                <a th:href="@{/login}" class="text-decoration-none">
+                                    <i class="fas fa-sign-in-alt me-1"></i>Já possui conta? Faça login
+                                </a>
+                            </div>
                         </form>
-                        <div class="text-center mt-3">
-                            <a th:href="@{/login}" class="btn btn-link">Já possui conta? Faça login</a>
-                        </div>
                     </div>
                 </div>
             </div>

@@ -1,38 +1,61 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
 <head>
-    <title>Login</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Login - Gestão de Resíduos</title>
 </head>
 <body>
-    <div class="container mt-5">
+    <div layout:fragment="content">
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="text-center">Login</h3>
-                    </div>
-                    <div class="card-body">
+            <div class="col-md-6 col-lg-5">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <h3 class="card-title text-center mb-4">
+                            <i class="fas fa-sign-in-alt text-primary me-2"></i>Login
+                        </h3>
+                        
                         <div th:if="${param.error}" class="alert alert-danger">
-                            Email ou senha inválidos.
+                            <i class="fas fa-exclamation-circle me-2"></i>Email ou senha inválidos.
                         </div>
+                        
                         <div th:if="${param.logout}" class="alert alert-success">
-                            Você foi desconectado com sucesso.
+                            <i class="fas fa-check-circle me-2"></i>Você foi desconectado com sucesso.
                         </div>
+                        
                         <form th:action="@{/login}" method="post">
-                            <div class="form-group">
-                                <label for="username">Email:</label>
-                                <input type="email" class="form-control" id="username" name="username" required>
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Email:</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+                                    <input type="email" class="form-control" id="username" name="username" required>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="password">Senha:</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
+                            
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Senha:</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                </div>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+                            
+                            <div class="d-grid mb-3">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Entrar
+                                </button>
+                            </div>
+                            
+                            <div class="text-center">
+                                <a th:href="@{/users/register}" class="text-decoration-none">
+                                    <i class="fas fa-user-plus me-1"></i>Criar nova conta
+                                </a>
+                            </div>
                         </form>
-                        <div class="text-center mt-3">
-                            <a th:href="@{/users/register}" class="btn btn-link">Criar nova conta</a>
-                        </div>
                     </div>
                 </div>
             </div>

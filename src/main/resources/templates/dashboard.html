@@ -1,26 +1,94 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
 <head>
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Dashboard - Gestão de Resíduos</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">Gestão de Resíduos</a>
-            <div class="navbar-nav ml-auto">
-                <form th:action="@{/logout}" method="post" class="form-inline">
-                    <button type="submit" class="btn btn-outline-light">Sair</button>
-                </form>
+    <div layout:fragment="content">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mb-4">Dashboard</h1>
             </div>
         </div>
-    </nav>
 
-    <div class="container mt-4">
+        <!-- Cards de Estatísticas -->
+        <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-trash-alt text-primary me-2"></i>
+                            Total de Resíduos
+                        </h5>
+                        <p class="card-text display-4">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-recycle text-success me-2"></i>
+                            Resíduos Reciclados
+                        </h5>
+                        <p class="card-text display-4">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-chart-line text-info me-2"></i>
+                            Taxa de Reciclagem
+                        </h5>
+                        <p class="card-text display-4">0%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Área de Conteúdo Principal -->
         <div class="row">
-            <div class="col-md-12">
-                <h2>Bem-vindo ao Sistema de Gestão de Resíduos</h2>
-                <p>Este é seu painel de controle. Aqui você poderá gerenciar seus resíduos.</p>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">Bem-vindo ao Sistema de Gestão de Resíduos</h5>
+                        
+                        <!-- Conteúdo para usuários autenticados -->
+                        <div sec:authorize="isAuthenticated()" class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Você está logado e pode registrar novos resíduos.
+                        </div>
+
+                        <!-- Conteúdo para visitantes -->
+                        <div sec:authorize="!isAuthenticated()" class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Para registrar resíduos, por favor faça login ou crie uma conta.
+                        </div>
+
+                        <!-- Ações Rápidas -->
+                        <div class="row mt-4">
+                            <div class="col-md-6 mb-3">
+                                <div class="d-grid">
+                                    <a href="/waste/register" class="btn btn-primary" sec:authorize="isAuthenticated()">
+                                        <i class="fas fa-plus-circle me-2"></i>Registrar Novo Resíduo
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="d-grid">
+                                    <a href="/users/register" class="btn btn-outline-primary" sec:authorize="!isAuthenticated()">
+                                        <i class="fas fa-user-plus me-2"></i>Criar Nova Conta
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

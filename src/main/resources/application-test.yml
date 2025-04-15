@@ -19,6 +19,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  thymeleaf:
+    cache: false
 logging:
   level:
     org.springframework.security: DEBUG
