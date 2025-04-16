@@ -21,6 +21,13 @@ spring:
         format_sql: true
   thymeleaf:
     cache: false
+  session:
+    store-type: jdbc
+    jdbc:
+      initialize-schema: always
+    timeout: 3600
+
 logging:
   level:
     org.springframework.security: DEBUG
+    com.reciclamais.waste_management: DEBUG

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layout/base}">
 <head>
     <title>Registro de Resíduo</title>
@@ -10,41 +11,63 @@
         <div class="container">
             <h2 class="mb-4">Registro de Resíduo</h2>
             
+            <!-- Informações de autenticação para depuração -->
+            <div class="alert alert-info" role="alert">
+                <p>Usuário autenticado: <span sec:authentication="name">Não autenticado</span></p>
+                <p>Autoridades: <span sec:authentication="principal.authorities">Nenhuma</span></p>
+            </div>
+            
+            <!-- Alerta para mensagens flash -->
+            <div th:if="${message}" class="alert" th:classappend="${messageType}" role="alert">
+                <span th:text="${message}"></span>
+            </div>
+            
+            <!-- Alerta para mensagens de erro -->
+            <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                <span th:text="${errorMessage}"></span>
+            </div>
+            
             <form th:action="@{/waste/register}" method="post" th:object="${waste}" class="needs-validation" novalidate>
+                <!-- Campo hidden para a data -->
+                <input type="hidden" th:field="*{date}" />
+                
                 <div class="mb-3">
-                    <label for="type" class="form-label">Tipo de Resíduo</label>
-                    <select class="form-select" id="type" th:field="*{type}" required>
+                    <label for="type" class="form-label">Tipo de Resíduo *</label>
+                    <select class="form-select" id="type" name="type" th:field="*{type}" 
+                            th:classappend="${#fields.hasErrors('type')} ? 'is-invalid'" required>
                         <option value="">Selecione o tipo...</option>
-                        <option value="PLASTIC">Plástico</option>
-                        <option value="PAPER">Papel</option>
-                        <option value="GLASS">Vidro</option>
-                        <option value="METAL">Metal</option>
-                        <option value="ORGANIC">Orgânico</option>
-                        <option value="ELECTRONIC">Eletrônico</option>
-                        <option value="CONSTRUCTION">Construção</option>
-                        <option value="HOSPITAL">Hospitalar</option>
+                        <option th:each="type : ${T(com.reciclamais.waste_management.model.Type).values()}"
+                                th:value="${type}"
+                                th:text="${type}">Tipo</option>
                     </select>
-                    <div class="invalid-feedback">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('type')}" th:errors="*{type}">
                         Por favor, selecione um tipo de resíduo.
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="weight" class="form-label">Peso (kg)</label>
-                    <input type="number" class="form-control" id="weight" th:field="*{weight}" 
-                           step="0.01" min="0" required>
-                    <div class="invalid-feedback">
-                        Por favor, informe um peso válido.
+                    <label for="weight" class="form-label">Peso (kg) *</label>
+                    <input type="number" class="form-control" id="weight" name="weight" th:field="*{weight}" 
+                           th:classappend="${#fields.hasErrors('weight')} ? 'is-invalid'"
+                           step="0.01" min="0.01" required>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('weight')}" th:errors="*{weight}">
+                        Por favor, informe um peso válido maior que zero.
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="description" class="form-label">Descrição</label>
-                    <textarea class="form-control" id="description" th:field="*{description}" 
-                              rows="3" required></textarea>
-                    <div class="invalid-feedback">
-                        Por favor, forneça uma descrição.
+                    <label for="description" class="form-label">Descrição *</label>
+                    <textarea class="form-control" id="description" name="description" th:field="*{description}" 
+                              th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'"
+                              rows="3" minlength="10" required></textarea>
+                    <div class="form-text">A descrição deve ter pelo menos 10 caracteres.</div>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
+                        Por favor, forneça uma descrição com pelo menos 10 caracteres.
                     </div>
+                </div>
+
+                <div class="mb-3">
+                    <small class="text-muted">* Campos obrigatórios</small>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Registrar Resíduo</button>
@@ -52,5 +75,26 @@
             </form>
         </div>
     </div>
+
+    <!-- Script para validação do formulário -->
+    <script th:inline="javascript">
+        // Validação do formulário
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    // Só adiciona a classe se o formulário for inválido
+                    if (!form.checkValidity()) {
+                        form.classList.add('was-validated')
+                    }
+                }, false)
+            })
+        })()
+    </script>
 </body>
 </html> 

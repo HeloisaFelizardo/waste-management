@@ -1,0 +1,10 @@
+spring:
+  session:
+    store-type: jdbc
+    jdbc:
+      initialize-schema: always
+    timeout: 3600
+
+logging:
+  level:
+    com.reciclamais.waste_management: DEBUG 

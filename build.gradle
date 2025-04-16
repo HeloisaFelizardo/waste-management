@@ -29,6 +29,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.session:spring-session-core'
+	implementation 'org.springframework.session:spring-session-jdbc'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
 	implementation 'io.github.wimdeblauwe:htmx-spring-boot-thymeleaf:4.0.1'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
