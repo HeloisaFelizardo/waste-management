@@ -14,7 +14,7 @@
             <!-- Informações de autenticação para depuração -->
             <div class="alert alert-info" role="alert">
                 <p>Usuário autenticado: <span sec:authentication="name">Não autenticado</span></p>
-                <p>Autoridades: <span sec:authentication="principal.authorities">Nenhuma</span></p>
+                <!-- <p>Autoridades: <span sec:authentication="principal.authorities">Nenhuma</span></p> -->
             </div>
             
             <!-- Alerta para mensagens flash -->
@@ -30,7 +30,8 @@
             <form th:action="@{/waste/register}" method="post" th:object="${waste}" class="needs-validation" novalidate>
                 <!-- Campo hidden para a data -->
                 <input type="hidden" th:field="*{date}" />
-                
+
+                <!-- Campo tipo -->
                 <div class="mb-3">
                     <label for="type" class="form-label">Tipo de Resíduo *</label>
                     <select class="form-select" id="type" name="type" th:field="*{type}" 
@@ -45,6 +46,7 @@
                     </div>
                 </div>
 
+                <!-- Campo peso -->
                 <div class="mb-3">
                     <label for="weight" class="form-label">Peso (kg) *</label>
                     <input type="number" class="form-control" id="weight" name="weight" th:field="*{weight}" 
@@ -55,6 +57,7 @@
                     </div>
                 </div>
 
+                <!-- Campo descrição -->
                 <div class="mb-3">
                     <label for="description" class="form-label">Descrição *</label>
                     <textarea class="form-control" id="description" name="description" th:field="*{description}" 
@@ -66,6 +69,21 @@
                     </div>
                 </div>
 
+                <!-- Campo reciclado -->
+                <div class="mb-3">
+                    <label for="recycled" class="form-label">Foi Reciclado? *</label>
+                    <select class="form-select" id="recycled" name="recycled" th:field="*{recycled}"
+                            th:classappend="${#fields.hasErrors('recycled')} ? 'is-invalid'" required>
+                        <option value="">Selecione...</option>
+                        <option value="true">Sim</option>
+                        <option value="false">Não</option>
+                    </select>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('recycled')}" th:errors="*{recycled}">
+                        Por favor, selecione se o resíduo foi reciclado.
+                    </div>
+                </div>
+
+                <!-- Texto de campos obrigatórios -->
                 <div class="mb-3">
                     <small class="text-muted">* Campos obrigatórios</small>
                 </div>

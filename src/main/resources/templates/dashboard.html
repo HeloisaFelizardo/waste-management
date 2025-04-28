@@ -51,6 +51,41 @@
             </div>
         </div>
 
+        <!-- Cards de Tipos de Resíduos e Ranking de Usuários -->
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-header">Tipos de Resíduos Mais Coletados</div>
+                    <div class="card-body">
+                        <canvas id="tipoResiduosChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-header">Ranking de Usuários</div>
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>Posição</th>
+                                <th>Usuário</th>
+                                <th>Resíduos Reciclados</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="user, iterStat : ${rankingUsuarios}">
+                                <td th:text="${iterStat.index + 1}">1</td>
+                                <td th:text="${user.nome}">Usuário</td>
+                                <td th:text="${user.totalReciclados}">0</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Área de Conteúdo Principal -->
         <div class="row">
             <div class="col-12">
