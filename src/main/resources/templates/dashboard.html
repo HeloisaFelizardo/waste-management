@@ -5,94 +5,93 @@
       layout:decorate="~{layout/base}">
 <head>
     <title>Dashboard - Gestão de Resíduos</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
     <div layout:fragment="content">
-        <div class="row">
-            <div class="col-12">
-                <h1 class="mb-4">Dashboard</h1>
+        <div class="container mt-4">
+            <h2>Dashboard</h2>
+            
+            <!-- Cards de Resumo -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Total de Resíduos</h5>
+                            <p class="card-text display-4" th:text="${totalWaste} + ' kg'">0 kg</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Resíduos Reciclados</h5>
+                            <p class="card-text display-4" th:text="${wasteRecycled} + ' kg'">0 kg</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Taxa de Reciclagem</h5>
+                            <p class="card-text display-4" th:text="${recyclingRate} + '%'">0%</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- Cards de Estatísticas -->
-        <div class="row mb-4">
-            <div class="col-md-4 mb-3">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-trash-alt text-primary me-2"></i>
-                            Total de Resíduos
-                        </h5>
-                        <p class="card-text display-4">0</p>
+            <!-- Gráfico de Pizza e Ranking de Usuários-->
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Distribuição por Tipo de Resíduo</h5>
+                            <div class="chart-container" style="position: relative; height:400px; width:100%">
+                                <canvas id="pieChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card h-100">
+                        <div class="card-header">Ranking de Usuários</div>
+                        <div class="card-body">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Posição</th>
+                                    <th>Usuário</th>
+                                    <th>Resíduos Reciclados</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="user, iterStat : ${rankingUsuarios}">
+                                    <td th:text="${iterStat.index + 1}">1</td>
+                                    <td th:text="${user.nome}">Usuário</td>
+                                    <td th:text="${user.totalReciclados}">0</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 mb-3">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-recycle text-success me-2"></i>
-                            Resíduos Reciclados
-                        </h5>
-                        <p class="card-text display-4">0</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-chart-line text-info me-2"></i>
-                            Taxa de Reciclagem
-                        </h5>
-                        <p class="card-text display-4">0%</p>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Cards de Tipos de Resíduos e Ranking de Usuários -->
-        <div class="row mb-4">
-            <div class="col-md-6 mb-3">
-                <div class="card h-100">
-                    <div class="card-header">Tipos de Resíduos Mais Coletados</div>
-                    <div class="card-body">
-                        <canvas id="tipoResiduosChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="card h-100">
-                    <div class="card-header">Ranking de Usuários</div>
-                    <div class="card-body">
-                        <table class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th>Posição</th>
-                                <th>Usuário</th>
-                                <th>Resíduos Reciclados</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="user, iterStat : ${rankingUsuarios}">
-                                <td th:text="${iterStat.index + 1}">1</td>
-                                <td th:text="${user.nome}">Usuário</td>
-                                <td th:text="${user.totalReciclados}">0</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
         </div>
-
         <!-- Área de Conteúdo Principal -->
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title mb-4">Bem-vindo ao Sistema de Gestão de Resíduos</h5>
-                        
+
                         <!-- Conteúdo para usuários autenticados -->
                         <div sec:authorize="isAuthenticated()" class="alert alert-info">
                             <i class="fas fa-info-circle me-2"></i>
@@ -126,6 +125,64 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div layout:fragment="scripts">
+        <script th:inline="javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('DOM loaded');
+                
+                // Get data from Thymeleaf
+                const typeWasteData = /*[[${typeWaste}]]*/ [];
+                console.log('Data received:', typeWasteData);
+                
+                if (typeWasteData && typeWasteData.length > 0) {
+                    const ctx = document.getElementById('pieChart').getContext('2d');
+                    
+                    const labels = typeWasteData.map(item => item.type);
+                    const data = typeWasteData.map(item => item.quantity);
+                    const backgroundColors = [
+                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+                        '#FF9F40', '#8AC24A', '#FF6384', '#36A2EB', '#FFCE56'
+                    ];
+                    
+                    new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: data,
+                                backgroundColor: backgroundColors
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'right'
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const label = context.label || '';
+                                            const value = context.raw || 0;
+                                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                            const percentage = Math.round((value / total) * 100);
+                                            return `${label}: ${value} kg (${percentage}%)`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    console.log('No data available for chart');
+                    document.getElementById('pieChart').parentElement.innerHTML = 
+                        '<div class="alert alert-info">Nenhum dado disponível para exibição</div>';
+                }
+            });
+        </script>
     </div>
 </body>
 </html>

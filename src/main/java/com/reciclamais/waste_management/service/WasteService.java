@@ -1,7 +1,9 @@
 package com.reciclamais.waste_management.service;
 
+import com.reciclamais.waste_management.dto.TypeWasteDTO;
 import com.reciclamais.waste_management.model.Waste;
 import com.reciclamais.waste_management.model.User;
+import com.reciclamais.waste_management.model.Type;
 import com.reciclamais.waste_management.repository.WasteRepository;
 import com.reciclamais.waste_management.repository.UserRepository;
 import org.slf4j.Logger;
@@ -12,6 +14,9 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.Comparator;
 
 /**
  * Serviço responsável pela lógica de negócio relacionada a resíduos.
@@ -127,6 +132,78 @@ public class WasteService {
         if (!StringUtils.hasText(waste.getDescription()) || waste.getDescription().length() < MIN_DESCRIPTION_LENGTH) {
             throw new IllegalArgumentException("Descrição deve ter pelo menos " + MIN_DESCRIPTION_LENGTH + " caracteres");
         }
+    }
+
+    public double getRecyclingRate() {
+        double totalWaste = getTotalWaste();
+        if (totalWaste == 0) {
+            return 0.0;
+        }
+        double recycledWaste = getWasteRecycled();
+        return (recycledWaste / totalWaste) * 100;
+    }
+
+    public double getTotalWaste() {
+        List<Waste> allWastes = wasteRepository.findAll();
+        if (allWastes.isEmpty()) {
+            return 0.0;
+        }
+        return allWastes.stream()
+                .mapToDouble(Waste::getWeight)
+                .sum();
+    }
+
+    public double getWasteRecycled() {
+        List<Waste> allWastes = wasteRepository.findAll();
+        if (allWastes.isEmpty()) {
+            return 0.0;
+        }
+        return allWastes.stream()
+                .filter(Waste::getRecycled)
+                .mapToDouble(Waste::getWeight)
+                .sum();
+    }
+
+    public List<TypeWasteDTO> getWasteByType() {
+        List<Waste> allWastes = wasteRepository.findAll();
+        logger.info("Total wastes found: {}", allWastes.size());
+        
+        if (allWastes.isEmpty()) {
+            return List.of();
+        }
+
+        // Group wastes by type and calculate total weight for each type
+        Map<Type, Double> typeWeights = allWastes.stream()
+                .collect(Collectors.groupingBy(
+                        Waste::getType,
+                        Collectors.summingDouble(Waste::getWeight)
+                ));
+
+        logger.info("Type weights: {}", typeWeights);
+
+        // Calculate total weight for percentage calculation
+        double totalWeight = typeWeights.values().stream()
+                .mapToDouble(Double::doubleValue)
+                .sum();
+
+        logger.info("Total weight: {}", totalWeight);
+
+        // Convert to DTOs with proper quantities and percentages
+        List<TypeWasteDTO> result = typeWeights.entrySet().stream()
+                .map(entry -> {
+                    double weight = entry.getValue();
+                    double percentage = (weight / totalWeight) * 100;
+                    return new TypeWasteDTO(
+                            entry.getKey().name(),
+                            (int) Math.round(weight),
+                            percentage
+                    );
+                })
+                .sorted(Comparator.comparing(TypeWasteDTO::getQuantity).reversed())
+                .collect(Collectors.toList());
+
+        logger.info("Result DTOs: {}", result);
+        return result;
     }
 }
 

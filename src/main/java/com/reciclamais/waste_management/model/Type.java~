@@ -2,11 +2,11 @@ package com.reciclamais.waste_management.model;
 
 public enum Type {
     PLASTICO,
-    ORGANICO,
-    PAPEL,
-    VIDRO,
+    ORGANIC,
+    PAPER,
+    GLASS,
     METAL,
-    ELETRONICO,
-    CONSTRUCAO,
-    HOSPITALAR
+    ELECTRONIC,
+    CONSTRUCTION,
+    HOSPITAL
 }
