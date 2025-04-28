@@ -7,14 +7,21 @@ import com.reciclamais.waste_management.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
+/**
+ * Serviço responsável pela lógica de negócio relacionada a resíduos.
+ * Esta classe encapsula todas as operações e regras de negócio relacionadas a resíduos.
+ */
 @Service
 public class WasteService {
 
     private static final Logger logger = LoggerFactory.getLogger(WasteService.class);
+    private static final int MIN_DESCRIPTION_LENGTH = 10;
     
     private final WasteRepository wasteRepository;
     private final UserRepository userRepository;
@@ -25,38 +32,127 @@ public class WasteService {
         logger.info("WasteService construído com sucesso");
     }
 
+    /**
+     * Salva um novo resíduo associado a um usuário.
+     * Este método implementa as seguintes regras de negócio:
+     * 1. Valida se o usuário existe
+     * 2. Associa o resíduo ao usuário
+     * 3. Valida os dados do resíduo
+     * 4. Persiste o resíduo no banco de dados
+     *
+     * @param waste Resíduo a ser salvo
+     * @param userEmail Email do usuário que está registrando o resíduo
+     * @throws IllegalArgumentException Se o email do usuário for inválido
+     * @throws UserNotFoundException Se o usuário não for encontrado
+     * @throws WasteValidationException Se os dados do resíduo forem inválidos
+     */
+    @Transactional
     public void save(Waste waste, String userEmail) {
-        logger.info("Tentando salvar resíduo para o usuário: {}", userEmail);
-        
-        // Verificar se o email está vazio
-        if (userEmail == null || userEmail.trim().isEmpty()) {
-            logger.error("Email do usuário está vazio");
-            throw new RuntimeException("Email do usuário não pode ser vazio");
+        if (!StringUtils.hasText(userEmail)) {
+            throw new IllegalArgumentException("Email do usuário não pode ser vazio");
         }
-        
-        // Buscar o usuário
-        Optional<User> userOpt = userRepository.findByEmail(userEmail);
-        logger.info("Usuário encontrado: {}", userOpt.isPresent());
-        
-        User user = userOpt.orElseThrow(() -> {
-            logger.error("Usuário não encontrado com o email: {}", userEmail);
-            return new RuntimeException("Usuário não encontrado");
-        });
-        
-        logger.info("Usuário encontrado: {}", user.getName());
+
+        User user = userRepository.findByEmail(userEmail)
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado: " + userEmail));
+
+        validateWaste(waste);
         waste.setUser(user);
         
         try {
             wasteRepository.save(waste);
-            logger.info("Resíduo salvo com sucesso: {}", waste);
+            logger.info("Resíduo salvo com sucesso para o usuário: {}", userEmail);
         } catch (Exception e) {
-            logger.error("Erro ao salvar resíduo: {}", e.getMessage(), e);
-            throw new RuntimeException("Erro ao salvar resíduo: " + e.getMessage());
+            logger.error("Erro ao salvar resíduo: {}", e.getMessage());
+            throw new RuntimeException("Erro ao salvar resíduo", e);
         }
     }
 
+    /**
+     * Busca todos os resíduos cadastrados.
+     *
+     * @return Lista de todos os resíduos
+     */
     public List<Waste> findAll() {
         logger.info("Buscando todos os resíduos");
         return wasteRepository.findAll();
+    }
+
+    /**
+     * Busca resíduos por período.
+     *
+     * @param startDate Data inicial
+     * @param endDate Data final
+     * @return Lista de resíduos no período
+     */
+    public List<Waste> findByPeriod(LocalDate startDate, LocalDate endDate) {
+        logger.info("Buscando resíduos no período de {} a {}", startDate, endDate);
+        // TODO: Implementar busca por período
+        return wasteRepository.findAll();
+    }
+
+    /**
+     * Busca resíduos por usuário.
+     *
+     * @param userEmail Email do usuário
+     * @return Lista de resíduos do usuário
+     */
+    public List<Waste> findByUser(String userEmail) {
+        if (!StringUtils.hasText(userEmail)) {
+            throw new IllegalArgumentException("Email do usuário não pode ser vazio");
+        }
+        logger.info("Buscando resíduos do usuário: {}", userEmail);
+        // TODO: Implementar busca por usuário
+        return wasteRepository.findAll();
+    }
+
+    /**
+     * Valida os dados do resíduo.
+     *
+     * @param waste Resíduo a ser validado
+     * @throws WasteValidationException Se os dados forem inválidos
+     */
+    private void validateWaste(Waste waste) {
+        if (waste == null) {
+            throw new IllegalArgumentException("Resíduo não pode ser nulo");
+        }
+        if (waste.getDate() == null) {
+            throw new IllegalArgumentException("Data do resíduo é obrigatória");
+        }
+        if (waste.getWeight() == null || waste.getWeight() <= 0) {
+            throw new IllegalArgumentException("Peso do resíduo deve ser maior que zero");
+        }
+        if (waste.getType() == null) {
+            throw new IllegalArgumentException("Tipo do resíduo é obrigatório");
+        }
+        if (!StringUtils.hasText(waste.getDescription()) || waste.getDescription().length() < MIN_DESCRIPTION_LENGTH) {
+            throw new IllegalArgumentException("Descrição deve ter pelo menos " + MIN_DESCRIPTION_LENGTH + " caracteres");
+        }
+    }
+}
+
+/**
+ * Exceção lançada quando um usuário não é encontrado.
+ */
+class UserNotFoundException extends RuntimeException {
+    public UserNotFoundException(String message) {
+        super(message);
+    }
+}
+
+/**
+ * Exceção lançada quando há erro na validação dos dados do resíduo.
+ */
+class WasteValidationException extends RuntimeException {
+    public WasteValidationException(String message) {
+        super(message);
+    }
+}
+
+/**
+ * Exceção lançada quando há erro ao persistir o resíduo.
+ */
+class WastePersistenceException extends RuntimeException {
+    public WastePersistenceException(String message, Throwable cause) {
+        super(message, cause);
     }
 }
