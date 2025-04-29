@@ -79,7 +79,7 @@
                                 <i class="fas fa-chart-line"></i>
                             </div>
                             <h5 class="card-title">Taxa de Reciclagem</h5>
-                            <p class="card-text display-4" th:text="${recyclingRate} + '%'">0%</p>
+                            <p class="card-value display-4" th:text="${recyclingRate} + '%'">0%</p>
                         </div>
                     </div>
                 </div>
