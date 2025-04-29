@@ -5,7 +5,9 @@ public enum Type {
     ORGANICO,
     PAPEL,
     VIDRO,
-    METAL,
+    FERRO,
+    ALUMINIO,
+    COBRE,
     ELETRONICO,
     CONSTRUCAO,
     HOSPITALAR
