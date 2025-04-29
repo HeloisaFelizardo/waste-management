@@ -19,7 +19,7 @@ body {
 }
 
 .nav-link {
-    color: rgba(255, 255, 255, 0.8) !important;
+    color: rgba(255,255,255,0.8) !important;
 }
 
 .nav-link:hover {
@@ -53,26 +53,21 @@ body {
     height: 300px;
     width: 100%;
 }
-
 .dashboard-card {
     height: 100%;
     transition: transform 0.2s;
 }
-
 .dashboard-card:hover {
     transform: translateY(-5px);
 }
-
 .card-value {
     font-weight: 500;
     margin: 10px 0;
 }
-
 .card-icon {
     font-size: 2rem;
     margin-bottom: 10px;
 }
-
 .login-section {
     margin-top: 2rem;
     padding: 1.5rem;
@@ -83,7 +78,7 @@ body {
 /* Responsividade para cards */
 .card {
     margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* Ajustes para telas pequenas */
@@ -92,11 +87,11 @@ body {
         padding-left: 15px;
         padding-right: 15px;
     }
-
+    
     .navbar-brand {
         font-size: 1.2rem;
     }
-
+    
     .card {
         margin-bottom: 15px;
     }

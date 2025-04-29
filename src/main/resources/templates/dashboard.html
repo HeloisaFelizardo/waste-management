@@ -7,33 +7,7 @@
     <title>Dashboard - Gestão de Resíduos</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        .chart-container {
-            position: relative;
-            height: 300px;
-            width: 100%;
-        }
-        .dashboard-card {
-            height: 100%;
-            transition: transform 0.2s;
-        }
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-        }
-        .card-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-        .card-icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-        .login-section {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background-color: #f8f9fa;
-            border-radius: 0.5rem;
-        }
+
     </style>
 </head>
 <body>
@@ -57,7 +31,7 @@
                                 <i class="fas fa-trash-alt"></i>
                             </div>
                             <h5 class="card-title">Total de Resíduos</h5>
-                            <p class="card-text display-4" th:text="${totalWaste} + ' kg'">0 kg</p>
+                            <p class="card-value display-4" th:text="${totalWaste} + ' kg'">0 kg</p>
                         </div>
                     </div>
                 </div>
@@ -68,7 +42,7 @@
                                 <i class="fas fa-recycle"></i>
                             </div>
                             <h5 class="card-title">Resíduos Reciclados</h5>
-                            <p class="card-text display-4" th:text="${wasteRecycled} + ' kg'">0 kg</p>
+                            <p class="card-value display-4" th:text="${wasteRecycled} + ' kg'">0 kg</p>
                         </div>
                     </div>
                 </div>
@@ -79,7 +53,7 @@
                                 <i class="fas fa-chart-line"></i>
                             </div>
                             <h5 class="card-title">Taxa de Reciclagem</h5>
-                            <p class="card-text display-4" th:text="${recyclingRate} + '%'">0%</p>
+                            <p class="card-value display-4" th:text="${recyclingRate} + '%'">0%</p>
                         </div>
                     </div>
                 </div>
@@ -115,8 +89,8 @@
                                     <tbody>
                                         <tr th:each="user, iterStat : ${rankingUsers}">
                                             <td th:text="${iterStat.index + 1}">1</td>
-                                            <td th:text="${user.nome}">Usuário</td>
-                                            <td th:text="${user.totalReciclados} + ' kg'">0 kg</td>
+                                            <td th:text="${user.name}">Usuário</td>
+                                            <td th:text="${#numbers.formatDecimal(user.totalRecycled, 1, 1)} + ' kg'">0 kg</td>
                                         </tr>
                                         <tr th:if="${#lists.isEmpty(rankingUsers)}">
                                             <td colspan="3" class="text-center">Nenhum dado disponível</td>

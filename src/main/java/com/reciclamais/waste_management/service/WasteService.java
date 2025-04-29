@@ -1,6 +1,7 @@
 package com.reciclamais.waste_management.service;
 
 import com.reciclamais.waste_management.dto.TypeWasteDTO;
+import com.reciclamais.waste_management.dto.UserRankingDTO;
 import com.reciclamais.waste_management.model.Waste;
 import com.reciclamais.waste_management.model.User;
 import com.reciclamais.waste_management.model.Type;
@@ -204,6 +205,37 @@ public class WasteService {
 
         logger.info("Result DTOs: {}", result);
         return result;
+    }
+
+    public List<UserRankingDTO> getUserRankings() {
+        List<Waste> allWastes = wasteRepository.findAll();
+        logger.info("Calculating user rankings from {} wastes", allWastes.size());
+
+        if (allWastes.isEmpty()) {
+            return List.of();
+        }
+
+        // Group wastes by user and calculate total recycled weight for each user
+        Map<User, Double> userRecycledWeights = allWastes.stream()
+                .filter(Waste::getRecycled)
+                .collect(Collectors.groupingBy(
+                        Waste::getUser,
+                        Collectors.summingDouble(Waste::getWeight)
+                ));
+
+        logger.info("User recycled weights: {}", userRecycledWeights);
+
+        // Convert to DTOs and sort by total recycled weight
+        List<UserRankingDTO> rankings = userRecycledWeights.entrySet().stream()
+                .map(entry -> new UserRankingDTO(
+                        entry.getKey().getName(),
+                        entry.getValue()
+                ))
+                .sorted(Comparator.comparing(UserRankingDTO::getTotalRecycled).reversed())
+                .collect(Collectors.toList());
+
+        logger.info("User rankings: {}", rankings);
+        return rankings;
     }
 }
 
