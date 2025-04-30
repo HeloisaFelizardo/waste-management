@@ -15,6 +15,33 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Serviço responsável pela previsão de resíduos e análise de tendências.
+ * 
+ * Este serviço utiliza técnicas estatísticas para:
+ * - Prever a quantidade de resíduos para o próximo mês
+ * - Calcular o nível de confiança das previsões
+ * - Analisar tendências históricas
+ * 
+ * Principais funcionalidades:
+ * 1. Previsão de Resíduos
+ *    - Análise de dados históricos
+ *    - Regressão linear para previsão
+ *    - Cálculo de confiança estatística
+ * 
+ * 2. Análise de Dados
+ *    - Agrupamento por período
+ *    - Cálculo de médias e tendências
+ *    - Validação de dados suficientes
+ * 
+ * 3. Tratamento de Dados
+ *    - Normalização de valores
+ *    - Tratamento de casos especiais
+ *    - Garantia de valores válidos
+ * 
+ * @author Sistema de Gestão de Resíduos
+ * @version 1.0
+ */
 @Service
 public class ForecastService {
 
@@ -27,6 +54,24 @@ public class ForecastService {
         logger.info("ForecastService construído com sucesso");
     }
 
+    /**
+     * Prevé a quantidade de resíduos para o próximo mês.
+     * 
+     * Este método implementa as seguintes etapas:
+     * 1. Coleta dados históricos de resíduos
+     * 2. Agrupa resíduos por mês
+     * 3. Aplica regressão linear para previsão
+     * 4. Calcula o coeficiente de determinação (R²)
+     * 5. Retorna a previsão com nível de confiança
+     * 
+     * Requisitos para previsão:
+     * - Mínimo de 2 meses de dados históricos
+     * - Dados suficientes para regressão
+     * 
+     * @return DTO contendo a previsão e nível de confiança
+     *         - predictedAmount: Quantidade prevista em kg
+     *         - confidence: Nível de confiança entre 0 e 1
+     */
     public WastePredictionDTO predictNextMonthWaste() {
         List<Waste> allWastes = wasteRepository.findAll();
         logger.info("Calculating waste prediction from {} wastes", allWastes.size());

@@ -24,7 +24,33 @@ import java.util.Comparator;
 
 /**
  * Serviço responsável pela lógica de negócio relacionada a resíduos.
- * Esta classe encapsula todas as operações e regras de negócio relacionadas a resíduos.
+ * 
+ * Esta classe encapsula todas as operações e regras de negócio relacionadas a resíduos,
+ * incluindo:
+ * - Cadastro e validação de resíduos
+ * - Consultas e relatórios
+ * - Cálculos de métricas de reciclagem
+ * - Rankings de usuários
+ * 
+ * Principais funcionalidades:
+ * 1. Gestão de Resíduos
+ *    - Cadastro de novos resíduos
+ *    - Validação de dados
+ *    - Busca por usuário e período
+ * 
+ * 2. Métricas e Relatórios
+ *    - Total de resíduos
+ *    - Taxa de reciclagem
+ *    - Distribuição por tipo
+ *    - Ranking de usuários
+ * 
+ * 3. Validações
+ *    - Verificação de dados obrigatórios
+ *    - Validação de regras de negócio
+ *    - Tratamento de exceções específicas
+ * 
+ * @author Sistema de Gestão de Resíduos
+ * @version 1.0
  */
 @Service
 public class WasteService {
@@ -43,6 +69,7 @@ public class WasteService {
 
     /**
      * Salva um novo resíduo associado a um usuário.
+     * 
      * Este método implementa as seguintes regras de negócio:
      * 1. Valida se o usuário existe
      * 2. Associa o resíduo ao usuário
@@ -54,6 +81,7 @@ public class WasteService {
      * @throws IllegalArgumentException Se o email do usuário for inválido
      * @throws UserNotFoundException Se o usuário não for encontrado
      * @throws WasteValidationException Se os dados do resíduo forem inválidos
+     * @throws WastePersistenceException Se ocorrer erro ao persistir o resíduo
      */
     @Transactional
     public void save(Waste waste, String userEmail) {
@@ -77,8 +105,8 @@ public class WasteService {
     }
 
     /**
-     * Busca todos os resíduos cadastrados.
-     *
+     * Busca todos os resíduos cadastrados no sistema.
+     * 
      * @return Lista de todos os resíduos
      */
     public List<Waste> findAll() {
@@ -87,11 +115,11 @@ public class WasteService {
     }
 
     /**
-     * Busca resíduos por período.
-     *
-     * @param startDate Data inicial
-     * @param endDate Data final
-     * @return Lista de resíduos no período
+     * Busca resíduos por período específico.
+     * 
+     * @param startDate Data inicial do período
+     * @param endDate Data final do período
+     * @return Lista de resíduos no período especificado
      */
     public List<Waste> findByPeriod(LocalDate startDate, LocalDate endDate) {
         logger.info("Buscando resíduos no período de {} a {}", startDate, endDate);
@@ -100,10 +128,11 @@ public class WasteService {
     }
 
     /**
-     * Busca resíduos por usuário.
-     *
+     * Busca resíduos associados a um usuário específico.
+     * 
      * @param userEmail Email do usuário
      * @return Lista de resíduos do usuário
+     * @throws IllegalArgumentException Se o email do usuário for inválido
      */
     public List<Waste> findByUser(String userEmail) {
         if (!StringUtils.hasText(userEmail)) {
@@ -115,10 +144,17 @@ public class WasteService {
     }
 
     /**
-     * Valida os dados do resíduo.
-     *
+     * Valida os dados de um resíduo antes de salvá-lo.
+     * 
+     * Regras de validação:
+     * - Resíduo não pode ser nulo
+     * - Data é obrigatória
+     * - Peso deve ser maior que zero
+     * - Tipo é obrigatório
+     * - Descrição deve ter pelo menos 10 caracteres
+     * 
      * @param waste Resíduo a ser validado
-     * @throws WasteValidationException Se os dados forem inválidos
+     * @throws WasteValidationException Se alguma regra de validação não for atendida
      */
     private void validateWaste(Waste waste) {
         if (waste == null) {
@@ -138,6 +174,14 @@ public class WasteService {
         }
     }
 
+    /**
+     * Calcula a taxa de reciclagem do sistema.
+     * 
+     * A taxa é calculada como a razão entre o total de resíduos reciclados
+     * e o total de resíduos, multiplicada por 100 para obter a porcentagem.
+     * 
+     * @return Taxa de reciclagem em porcentagem
+     */
     public double getRecyclingRate() {
         double totalWaste = getTotalWaste();
         if (totalWaste == 0) {
@@ -147,6 +191,11 @@ public class WasteService {
         return (recycledWaste / totalWaste) * 100;
     }
 
+    /**
+     * Calcula o total de resíduos cadastrados no sistema.
+     * 
+     * @return Total de resíduos em kg
+     */
     public double getTotalWaste() {
         List<Waste> allWastes = wasteRepository.findAll();
         if (allWastes.isEmpty()) {
@@ -157,6 +206,11 @@ public class WasteService {
                 .sum();
     }
 
+    /**
+     * Calcula o total de resíduos reciclados no sistema.
+     * 
+     * @return Total de resíduos reciclados em kg
+     */
     public double getWasteRecycled() {
         List<Waste> allWastes = wasteRepository.findAll();
         if (allWastes.isEmpty()) {
@@ -168,6 +222,17 @@ public class WasteService {
                 .sum();
     }
 
+    /**
+     * Obtém a distribuição de resíduos por tipo.
+     * 
+     * Este método:
+     * 1. Agrupa os resíduos por tipo
+     * 2. Calcula o peso total para cada tipo
+     * 3. Calcula a porcentagem de cada tipo em relação ao total
+     * 4. Retorna os dados formatados em DTOs
+     * 
+     * @return Lista de DTOs contendo tipo, quantidade e porcentagem
+     */
     public List<TypeWasteDTO> getWasteByType() {
         List<Waste> allWastes = wasteRepository.findAll();
         logger.info("Total wastes found: {}", allWastes.size());
@@ -210,6 +275,17 @@ public class WasteService {
         return result;
     }
 
+    /**
+     * Obtém o ranking de usuários por quantidade de resíduos reciclados.
+     * 
+     * Este método:
+     * 1. Agrupa os resíduos reciclados por usuário
+     * 2. Calcula o peso total reciclado para cada usuário
+     * 3. Ordena os usuários por quantidade reciclada (decrescente)
+     * 4. Retorna os dados formatados em DTOs
+     * 
+     * @return Lista de DTOs contendo nome do usuário e total reciclado
+     */
     public List<UserRankingDTO> getUserRankings() {
         List<Waste> allWastes = wasteRepository.findAll();
         logger.info("Calculating user rankings from {} wastes", allWastes.size());
