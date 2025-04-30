@@ -15,16 +15,21 @@
         <div class="container mt-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2>Dashboard</h2>
-                <div sec:authorize="!isAuthenticated()">
-                    <a href="/login" class="btn btn-primary">
-                        <i class="fas fa-sign-in-alt me-2"></i>Entrar
+                <div>
+                    <a href="/test/generate-data" class="btn btn-warning me-2" sec:authorize="isAuthenticated()">
+                        <i class="fas fa-vial me-2"></i>Gerar Dados de Teste
                     </a>
+                    <div sec:authorize="!isAuthenticated()">
+                        <a href="/login" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt me-2"></i>Entrar
+                        </a>
+                    </div>
                 </div>
             </div>
 
             <!-- Cards de Resumo -->
             <div class="row g-4 mb-4">
-                 <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card dashboard-card">
                         <div class="card-body text-center">
                             <div class="card-icon text-primary">
@@ -35,7 +40,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card dashboard-card">
                         <div class="card-body text-center">
                             <div class="card-icon text-success">
@@ -46,7 +51,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card dashboard-card">
                         <div class="card-body text-center">
                             <div class="card-icon text-info">
@@ -54,6 +59,18 @@
                             </div>
                             <h5 class="card-title">Taxa de Reciclagem</h5>
                             <p class="card-value display-4" th:text="${recyclingRate} + '%'">0%</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card dashboard-card">
+                        <div class="card-body text-center">
+                            <div class="card-icon text-warning">
+                                <i class="fas fa-crystal-ball"></i>
+                            </div>
+                            <h5 class="card-title">Previsão Próximo Mês</h5>
+                            <p class="card-value display-4" th:text="${#numbers.formatDecimal(wastePrediction.predictedAmount, 1, 1)} + ' kg'">0 kg</p>
+                            <small class="text-muted" th:text="'Confiança: ' + ${#numbers.formatPercent(wastePrediction.confidence, 1, 1)}">Confiança: 0%</small>
                         </div>
                     </div>
                 </div>

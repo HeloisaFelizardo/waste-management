@@ -1,0 +1,24 @@
+package com.reciclamais.waste_management.controller;
+
+import com.reciclamais.waste_management.model.Waste;
+import com.reciclamais.waste_management.service.ForecastService;
+import com.reciclamais.waste_management.service.WasteService;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Controller
+public class ForecastController {
+
+    @Autowired
+    private WasteService wasteService;
+    private ForecastService forecastService;
+
+    @GetMapping("/forecast")
+    public ResponseEntity<Double> predictTotalWeight() {
+        List<Waste> wastes = forecastService.getWastes();
+    }
+}
