@@ -7,6 +7,9 @@ import com.reciclamais.waste_management.model.User;
 import com.reciclamais.waste_management.model.Type;
 import com.reciclamais.waste_management.repository.WasteRepository;
 import com.reciclamais.waste_management.repository.UserRepository;
+import com.reciclamais.waste_management.exceptions.UserNotFoundException;
+import com.reciclamais.waste_management.exceptions.WasteValidationException;
+import com.reciclamais.waste_management.exceptions.WastePersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -59,17 +62,17 @@ public class WasteService {
         }
 
         User user = userRepository.findByEmail(userEmail)
-            .orElseThrow(() -> new RuntimeException("Usuário não encontrado: " + userEmail));
+                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado com o email: " + userEmail));
 
-        validateWaste(waste);
         waste.setUser(user);
-        
+        validateWaste(waste);
+
         try {
             wasteRepository.save(waste);
-            logger.info("Resíduo salvo com sucesso para o usuário: {}", userEmail);
+            logger.info("Resíduo salvo com sucesso: {}", waste);
         } catch (Exception e) {
             logger.error("Erro ao salvar resíduo: {}", e.getMessage());
-            throw new RuntimeException("Erro ao salvar resíduo", e);
+            throw new WastePersistenceException("Erro ao salvar resíduo", e);
         }
     }
 
@@ -119,19 +122,19 @@ public class WasteService {
      */
     private void validateWaste(Waste waste) {
         if (waste == null) {
-            throw new IllegalArgumentException("Resíduo não pode ser nulo");
+            throw new WasteValidationException("Resíduo não pode ser nulo");
         }
         if (waste.getDate() == null) {
-            throw new IllegalArgumentException("Data do resíduo é obrigatória");
+            throw new WasteValidationException("Data do resíduo é obrigatória");
         }
         if (waste.getWeight() == null || waste.getWeight() <= 0) {
-            throw new IllegalArgumentException("Peso do resíduo deve ser maior que zero");
+            throw new WasteValidationException("Peso do resíduo deve ser maior que zero");
         }
         if (waste.getType() == null) {
-            throw new IllegalArgumentException("Tipo do resíduo é obrigatório");
+            throw new WasteValidationException("Tipo do resíduo é obrigatório");
         }
         if (!StringUtils.hasText(waste.getDescription()) || waste.getDescription().length() < MIN_DESCRIPTION_LENGTH) {
-            throw new IllegalArgumentException("Descrição deve ter pelo menos " + MIN_DESCRIPTION_LENGTH + " caracteres");
+            throw new WasteValidationException("Descrição deve ter pelo menos " + MIN_DESCRIPTION_LENGTH + " caracteres");
         }
     }
 
@@ -236,32 +239,5 @@ public class WasteService {
 
         logger.info("User rankings: {}", rankings);
         return rankings;
-    }
-}
-
-/**
- * Exceção lançada quando um usuário não é encontrado.
- */
-class UserNotFoundException extends RuntimeException {
-    public UserNotFoundException(String message) {
-        super(message);
-    }
-}
-
-/**
- * Exceção lançada quando há erro na validação dos dados do resíduo.
- */
-class WasteValidationException extends RuntimeException {
-    public WasteValidationException(String message) {
-        super(message);
-    }
-}
-
-/**
- * Exceção lançada quando há erro ao persistir o resíduo.
- */
-class WastePersistenceException extends RuntimeException {
-    public WastePersistenceException(String message, Throwable cause) {
-        super(message, cause);
     }
 }
