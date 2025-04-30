@@ -6,6 +6,7 @@ import com.reciclamais.waste_management.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +20,12 @@ public class DataInitializer implements ApplicationRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Value("${security.admin.email:admin@reciclamais.com}")
+    private String adminEmail;
+
+    @Value("${security.admin.initial-password:admin123}")
+    private String adminPassword;
+
     @Autowired
     public DataInitializer(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -30,14 +37,14 @@ public class DataInitializer implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         logger.info("Iniciando DataInitializer");
         
-        if (userRepository.findByEmail("admin@example.com").isEmpty()) {
+        if (userRepository.findByEmail(adminEmail).isEmpty()) {
             logger.info("Criando usuário administrador");
             User admin = new User();
             admin.setName("Administrador");
-            admin.setEmail("admin@example.com");
+            admin.setEmail(adminEmail);
 
             // Gera uma nova senha encriptada
-            String encodedPassword = passwordEncoder.encode("admin123");
+            String encodedPassword = passwordEncoder.encode(adminPassword);
             logger.info("Senha encriptada do admin: {}", encodedPassword);
 
             admin.setPassword(encodedPassword);
