@@ -30,5 +30,6 @@ public class User {
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(10) check (type_user in ('ADMIN', 'USER'))")
     private TypeUser typeUser;
 }
