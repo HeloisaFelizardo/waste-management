@@ -3,6 +3,7 @@ package com.reciclamais.waste_management.controller;
 import com.reciclamais.waste_management.model.Waste;
 import com.reciclamais.waste_management.model.Type;
 import com.reciclamais.waste_management.service.WasteService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ public class TestDataController {
     }
 
     @GetMapping("/test/generate-data")
+    @PreAuthorize("hasRole('ADMIN')")
     public String generateTestData(Authentication authentication, RedirectAttributes redirectAttributes) {
         String userEmail = authentication.getName();
         

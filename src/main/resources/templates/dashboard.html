@@ -16,7 +16,7 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2>Dashboard</h2>
                 <div>
-                    <a href="/test/generate-data" class="btn btn-warning me-2" sec:authorize="isAuthenticated()">
+                    <a href="/test/generate-data" class="btn btn-warning me-2" sec:authorize="hasRole('ADMIN')">
                         <i class="fas fa-vial me-2"></i>Gerar Dados de Teste
                     </a>
                     <div sec:authorize="!isAuthenticated()">
@@ -66,7 +66,7 @@
                     <div class="card dashboard-card">
                         <div class="card-body text-center">
                             <div class="card-icon text-warning">
-                                <i class="fas fa-crystal-ball"></i>
+                                <i class="fas fa-chart-line"></i>
                             </div>
                             <h5 class="card-title">Previsão Próximo Mês</h5>
                             <p class="card-value display-4" th:text="${#numbers.formatDecimal(wastePrediction.predictedAmount, 1, 1)} + ' kg'">0 kg</p>
