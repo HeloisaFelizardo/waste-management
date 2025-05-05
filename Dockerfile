@@ -13,9 +13,6 @@ COPY . .
 # Gera o JAR
 RUN gradle build -x test
 
-# Copia os arquivos de configuração
-COPY src/main/resources/application-prod.yml /app/src/main/resources/
-
 # Expõe a porta que a aplicação vai usar
 EXPOSE 8080
 
