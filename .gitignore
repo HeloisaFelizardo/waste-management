@@ -39,3 +39,4 @@ out/
 # Evita enviar credenciais de produção para o GitHub
 /src/main/resources/application-prod.yml
 /src/main/resources/application-dev.yml
+.env

@@ -11,6 +11,8 @@ WORKDIR /app
 COPY . .
 
 # Gera o JAR
+COPY build.gradle settings.gradle ./
+COPY src ./src
 RUN gradle build -x test
 
 # Expõe a porta que a aplicação vai usar
