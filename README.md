@@ -1,13 +1,65 @@
 # Sistema de Gestão de Resíduos
 
-Sistema web para gerenciamento de resíduos, desenvolvido com Spring Boot e Thymeleaf.
+Sistema web moderno que utiliza Spring Boot no backend e Thymeleaf com Bootstrap no frontend, oferecendo uma experiência completa para gestão e monitoramento de resíduos recicláveis. 
+Acesse `https://reciclamais.onrender.com/`
 
 ## Funcionalidades
 
-- Cadastro e autenticação de usuários
-- Registro de resíduos
-- Dashboard com estatísticas
-- Interface responsiva
+1. Gestão de Usuários
+    - Autenticação e autorização de usuários
+    - Dois tipos de usuários: ADMIN e USER
+    - Registro de novos usuários (automaticamente como USER)
+    - Login e logout seguros
+    - Proteção de rotas baseada em roles
+
+
+2. Gestão de Resíduos
+    - Cadastro de resíduos com informações detalhadas:
+        - Tipo (PLÁSTICO, PAPEL, VIDRO, etc.)
+        - Peso
+        - Data
+        - Descrição
+        - Status de reciclagem
+    - Validação de campos obrigatórios
+    - Associação automática ao usuário logado
+
+
+3. Dashboard e Visualizações
+    - Cards de resumo com métricas importantes:
+        - Total de resíduos (em kg)
+        - Quantidade de resíduos reciclados
+        - Taxa de reciclagem
+        - Previsão para o próximo mês (com nível de confiança)
+    - Gráfico de pizza mostrando distribuição por tipo de resíduo
+    - Ranking de usuários por quantidade reciclada
+
+
+4. Previsão e Análise
+    - Sistema de previsão de resíduos para o próximo mês
+    - Cálculo de confiança nas previsões usando regressão linear
+    - Análise de tendências baseada em dados históricos
+
+
+5. Funcionalidades de Teste (Acesso Restrito)
+    - Geração de dados de teste para os últimos 3 meses
+    - Acesso restrito apenas para usuários ADMIN
+    - Proteção em duas camadas (interface e backend)
+    - Dados de teste com diferentes tipos de resíduos
+
+
+6. Segurança e Validações
+    - Proteção de rotas baseada em roles
+    - Validação de dados no backend
+    - Tratamento de exceções específicas
+    - Mensagens de erro e sucesso para o usuário
+
+
+7. Interface Amigável
+    - Design responsivo
+    - Visualizações gráficas interativas
+    - Mensagens de feedback para o usuário
+    - Botões de ação rápida
+    - Ícones intuitivos
 
 ## Tecnologias Utilizadas
 
@@ -17,8 +69,19 @@ Sistema web para gerenciamento de resíduos, desenvolvido com Spring Boot e Thym
 - Spring Data JPA
 - Thymeleaf
 - Bootstrap 5
-- MySQL
+- PostgreSQL
 - Lombok
+- Docker
+
+O sistema é uma aplicação web moderna que utiliza:
+- Spring Boot no backend
+- Thymeleaf com Bootstrap no frontend
+- Spring Security para autenticação e autorização
+- Apache Commons Math para análises estatísticas
+- Banco de dados para persistência de dados
+- Docker para containerização
+- H2 para testes em memória
+
 
 ## Estrutura do Projeto
 
